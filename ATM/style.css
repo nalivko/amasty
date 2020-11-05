@@ -1,0 +1,63 @@
+* {
+    box-sizing: border-box;
+}
+
+.container {
+    width: 600px;
+    margin: 0 auto;
+    border: 1px solid black;
+    padding: 10px 50px;
+    font-size: 18px;
+}
+
+.title {
+    text-align: center;
+}
+
+.data {
+    margin-bottom: 20px;
+}
+
+.container input {
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+}
+
+.clear {
+    clear: both;
+}
+
+button {
+    padding: 8px 24px;
+    margin-bottom: 20px;
+    border: 1px solid black;
+    float: right;
+    background-color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #f2f2f2;
+}
+
+button:active {
+    background-color: #979797;
+}
+
+.response {
+    padding: 20px;
+    background-color: aquamarine;
+}
+
+.response_table {
+    background-color: palegoldenrod;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.response_table td,
+.response_table th {
+    border: 1px solid #777777;
+    padding: 10px 20px;
+}
