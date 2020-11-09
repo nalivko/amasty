@@ -23,11 +23,8 @@ try {
 
 
 echo '<table><tr><td>Fullname</td><td>Balance</td></tr>';
-echo '<p>1. Query: "SELECT p.id, p.fullname, t1.from_person_id, SUM(t1.amount) as minus, t3.to_person_id, t3.plus, (100 - IFNULL(SUM(t1.amount), 0) + IFNULL(t3.plus, 0)) as balance FROM `persons` p LEFT JOIN transactions t1 ON p.id = t1.from_person_id LEFT JOIN (SELECT t2.to_person_id, SUM(t2.amount) as plus FROM persons p LEFT JOIN transactions t2 ON p.id = t2.to_person_id GROUP BY p.id) t3 ON p.id = t3.to_person_id GROUP BY p.id "</p>';
-foreach($connection->query('SELECT p.id, p.fullname, t1.from_person_id, SUM(t1.amount) as minus, t3.to_person_id, t3.plus, (100 - IFNULL(SUM(t1.amount), 0) + IFNULL(t3.plus, 0)) as balance
- FROM `persons` p LEFT JOIN transactions t1 ON p.id = t1.from_person_id
-  LEFT JOIN (SELECT t2.to_person_id, SUM(t2.amount) as plus FROM persons p LEFT JOIN transactions t2 ON p.id = t2.to_person_id GROUP BY p.id) t3 ON p.id = t3.to_person_id 
-  GROUP BY p.id', PDO::FETCH_ASSOC) as $row) {
+echo '<p>1. Query: "SELECT p.fullname, (100 - IFNULL(SUM(t1.amount), 0) + IFNULL(t3.plus, 0)) as balance FROM `persons` p LEFT JOIN transactions t1 ON p.id = t1.from_person_id LEFT JOIN (SELECT t2.to_person_id, SUM(t2.amount) as plus FROM persons p LEFT JOIN transactions t2 ON p.id = t2.to_person_id GROUP BY p.id) t3 ON p.id = t3.to_person_id GROUP BY p.id, t3.plus "</p>';
+foreach($connection->query('SELECT p.fullname, (100 - IFNULL(SUM(t1.amount), 0) + IFNULL(t3.plus, 0)) as balance FROM `persons` p LEFT JOIN transactions t1 ON p.id = t1.from_person_id LEFT JOIN (SELECT t2.to_person_id, SUM(t2.amount) as plus FROM persons p LEFT JOIN transactions t2 ON p.id = t2.to_person_id GROUP BY p.id) t3 ON p.id = t3.to_person_id GROUP BY p.id, t3.plus ', PDO::FETCH_ASSOC) as $row) {
     echo '<tr>';
     echo '<td>'. $row['fullname'] .'</td>';
     echo '<td>' . $row['balance'] . '</td>';
@@ -42,7 +39,7 @@ foreach($connection->query('SELECT result.fullname, result.transactionsSum as tr
  ORDER BY trCnt DESC
  LIMIT 1', PDO::FETCH_ASSOC) as $row) {
     echo '<pre>';
-    echo $row['fullname'] . ' Total transactions:' . $row["total"];
+    echo $row['fullname'] . ' - Total transactions:' . $row["trCnt"];
     echo '</pre>';
 }
 
