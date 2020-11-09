@@ -35,12 +35,12 @@ foreach($connection->query('SELECT p.id, p.fullname, t1.from_person_id, SUM(t1.a
 }
 echo '</table>';
 
-foreach($connection->query('SELECT p.fullname, total FROM (SELECT from_person_id, total FROM 
-(SELECT `from_person_id`, COUNT(*) as total FROM `transactions` LEFT JOIN (SELECT `to_person_id` FROM `transactions`)
- tb1 ON transactions.from_person_id = tb1.to_person_id GROUP BY from_person_id) tb2 WHERE total = 
- ((SELECT MAX(tb4.total) FROM (SELECT `from_person_id`, COUNT(*) as total FROM `transactions` LEFT JOIN 
- (SELECT `to_person_id` FROM `transactions`) tb3 ON transactions.from_person_id = tb3.to_person_id GROUP BY from_person_id) tb4)))
-  tb5 JOIN persons p ON tb5.from_person_id = p.id ', PDO::FETCH_ASSOC) as $row) {
+foreach($connection->query('SELECT result.fullname, result.transactionsSum as trCnt FROM
+(SELECT p.id, p.fullname, t1.cnt1, t2.cnt2, (IFNULL(t1.cnt1, 0) + IFNULL(t2.cnt2, 0)) as transactionsSum FROM persons p
+ LEFT JOIN (SELECT t.from_person_id, COUNT(from_person_id) as cnt1 FROM transactions t GROUP BY t.from_person_id) t1 ON p.id = t1.from_person_id
+ LEFT JOIN (SELECT t.to_person_id, COUNT(to_person_id) as cnt2 FROM transactions t GROUP BY t.to_person_id) t2 ON p.id = t2.to_person_id) result
+ ORDER BY trCnt DESC
+ LIMIT 1', PDO::FETCH_ASSOC) as $row) {
     echo '<pre>';
     echo $row['fullname'] . ' Total transactions:' . $row["total"];
     echo '</pre>';
